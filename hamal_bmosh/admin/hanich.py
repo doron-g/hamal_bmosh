@@ -6,11 +6,12 @@ from hamal_bmosh.models import Hanich
 from hamal_bmosh.resources import HanichResource
 
 
-class Hanichadmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = HanichResource
     search_fields = ["first_name", "last_name", "personal_id", "mahoz", "ken"]
     list_display = ["first_name", "last_name", "mahoz", "ken"]
-    list_filter = ["mahoz", "ken"]
+    autocomplete_fields = ["mahoz", "ken"]
+
     fieldsets = (
         ("פרטים אישיים", {
             "fields": (
@@ -48,4 +49,4 @@ class Hanichadmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     )
 
 
-admin.site.register(Hanich, Hanichadmin)
+admin.site.register(Hanich, HanichAdmin)

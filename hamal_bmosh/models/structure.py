@@ -2,6 +2,7 @@ from django.db import models
 from simple_history.models import HistoricalRecords
 
 import hebrew_constants
+from hamal_bmosh.choices import GradeNameChoices
 
 
 class Mahoz(models.Model):
@@ -25,8 +26,20 @@ class Ken(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.ken_name} {self.ken_code} - {self.mahoz}"
+        return f"{self.ken_name} - {self.mahoz}"
 
     class Meta:
         verbose_name = hebrew_constants.KEN
         verbose_name_plural = hebrew_constants.KENIM
+
+
+class Grade(models.Model):
+    name = models.CharField(max_length=45, blank=True, null=True, choices=GradeNameChoices.choices,
+                            verbose_name=hebrew_constants.GRADE)
+
+    def __str__(self):
+        return f"{self.name}"
+
+    class Meta:
+        verbose_name = hebrew_constants.GRADE
+        verbose_name_plural = hebrew_constants.GRADES

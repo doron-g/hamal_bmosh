@@ -188,7 +188,7 @@ class Base(Configuration):
             'hamal_bmosh.Hanich',
         )},
         {'app': 'hamal_bmosh', 'label': "מחוזות וקינים", "models": (
-            'hamal_bmosh.Mahoz', 'hamal_bmosh.Ken',
+            'hamal_bmosh.Mahoz', 'hamal_bmosh.Ken', 'hamal_bmosh.Grade'
         )},
         {'app': 'auth'},
 
