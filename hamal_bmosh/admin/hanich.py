@@ -1,3 +1,4 @@
+from admin_auto_filters.filters import AutocompleteFilterFactory
 from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
@@ -11,6 +12,8 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     search_fields = ["first_name", "last_name", "personal_id", "mahoz", "ken"]
     list_display = ["first_name", "last_name", "mahoz", "ken"]
     autocomplete_fields = ["mahoz", "ken"]
+    list_filter = [AutocompleteFilterFactory("מחוז", "mahoz"),
+                   AutocompleteFilterFactory("קן", "ken")]
 
     fieldsets = (
         ("פרטים אישיים", {

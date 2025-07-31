@@ -15,9 +15,10 @@ class KenAdmin(admin.ModelAdmin):
     list_display = ["ken_code", "ken_name", "get_mahoz_name"]
     readonly_fields = ["ken_code"]
     list_filter = [AutocompleteFilterFactory("מחוז", "mahoz")]
+    autocomplete_fields = ["mahoz"]
 
     def get_mahoz_name(self, obj):
-        return obj.mahoz.mahoz_name
+        return obj.mahoz.mahoz_name if obj.mahoz else None
 
     get_mahoz_name.short_description = "שם מחוז"
 
