@@ -40,6 +40,8 @@ class Base(Configuration):
         'import_export',
         'drf_spectacular',
         'simple_history',
+        'admin_auto_filters',
+        'admin_reorder',
     ]
     DJANGO_APPS = [
         'django.contrib.admin',
@@ -178,6 +180,15 @@ class Base(Configuration):
     # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
     DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+    ADMIN_REORDER = (
+        'sites',
+        {'app': 'hamal_bmosh', 'label': "חניכים", "models": (
+            'hamal_bmosh.Hanich',
+        )},
+        {'app': 'auth'},
+
+    )
+
 
 class Development(Base):
     CORS_ALLOW_ALL_ORIGINS = True
@@ -192,11 +203,13 @@ class Development(Base):
 
     }
 
+
 class Testing(Development):
     PASSWORD_HASHERS = [
         'django.contrib.auth.hashers.MD5PasswordHasher',
     ]
-    DATABASES = values.DatabaseURLValue( # This is about defaulting to running vs docker db if you don't specify something else
+    DATABASES = values.DatabaseURLValue(
+        # This is about defaulting to running vs docker db if you don't specify something else
         "postgresql://hamal_user:hamal_pass@127.0.0.1:5433/hamal_db")
 
     STORAGES = {
@@ -206,6 +219,7 @@ class Testing(Development):
             {"BACKEND": 'django.contrib.staticfiles.storage.StaticFilesStorage'}
 
     }
+
 
 class Staging(Base):
     DEBUG = False
@@ -218,7 +232,6 @@ class Production(Base):
     CORS_ALLOW_ALL_ORIGINS = False
     AWS_STORAGE_BUCKET_NAME = values.Value(environ_name="S3_STORAGE")
     # If heroku Add buckateer for s3 intergration
-    
 
     MIDDLEWARE = [
         'django.middleware.security.SecurityMiddleware',

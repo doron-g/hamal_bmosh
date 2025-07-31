@@ -141,6 +141,21 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-autocomplete-filter"
+version = "0.7.1"
+description = "A simple Django app to render list filters in django admin using autocomplete widget"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-admin-autocomplete-filter-0.7.1.tar.gz", hash = "sha256:5a8c9a7016e03104627b80b40811dcc567f26759971e4407f933951546367ba0"},
+    {file = "django_admin_autocomplete_filter-0.7.1-py3-none-any.whl", hash = "sha256:b2a71be2c4a68f828289eb51f71316dbdfac00a1843f53df1fbe4767aad2e3c0"},
+]
+
+[package.dependencies]
+django = ">=2.0"
+
+[[package]]
 name = "django-configurations"
 version = "2.5.1"
 description = "A helper for organizing Django settings."
@@ -223,7 +238,10 @@ files = [
 [package.dependencies]
 diff-match-patch = "20241021"
 Django = ">=4.2"
-tablib = ">=3.7.0"
+tablib = [
+    {version = ">=3.7.0"},
+    {version = "*", extras = ["xlsx"], optional = true, markers = "extra == \"xlsx\""},
+]
 
 [package.extras]
 all = ["tablib[all]"]
@@ -235,6 +253,25 @@ tests = ["chardet (==5.2.0)", "coverage (==7.6.4)", "django-extensions (==3.2.3)
 xls = ["tablib[xls]"]
 xlsx = ["tablib[xlsx]"]
 yaml = ["tablib[yaml]"]
+
+[[package]]
+name = "django-modeladmin-reorder"
+version = "0.3.1"
+description = "Custom ordering for the apps and models in the admin app."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = []
+develop = false
+
+[package.dependencies]
+django = "*"
+
+[package.source]
+type = "git"
+url = "https://github.com/bloodwithmilk25/django-modeladmin-reorder.git"
+reference = "master"
+resolved_reference = "6cc5060dec2fe1e894c3ba17aeb703b56737c3e8"
 
 [[package]]
 name = "django-querycount"
@@ -367,6 +404,18 @@ offline = ["drf-spectacular-sidecar"]
 sidecar = ["drf-spectacular-sidecar"]
 
 [[package]]
+name = "et-xmlfile"
+version = "2.0.0"
+description = "An implementation of lxml.xmlfile for the standard library"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "et_xmlfile-2.0.0-py3-none-any.whl", hash = "sha256:7a91720bc756843502c3b7504c77b8fe44217c85c537d85037f0f536151b2caa"},
+    {file = "et_xmlfile-2.0.0.tar.gz", hash = "sha256:dab3f4764309081ce75662649be815c4c9081e88f0837825f90fd28317d4da54"},
+]
+
+[[package]]
 name = "gunicorn"
 version = "23.0.0"
 description = "WSGI HTTP Server for UNIX"
@@ -460,6 +509,21 @@ files = [
 
 [package.dependencies]
 referencing = ">=0.31.0"
+
+[[package]]
+name = "openpyxl"
+version = "3.1.5"
+description = "A Python library to read/write Excel 2010 xlsx/xlsm files"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "openpyxl-3.1.5-py2.py3-none-any.whl", hash = "sha256:5282c12b107bffeef825f4617dc029afaf41d0ea60823bbb665ef3079dc79de2"},
+    {file = "openpyxl-3.1.5.tar.gz", hash = "sha256:cf0e3cf56142039133628b5acffe8ef0c12bc902d2aadd3e0fe5878dc08d1050"},
+]
+
+[package.dependencies]
+et-xmlfile = "*"
 
 [[package]]
 name = "packaging"
@@ -1028,6 +1092,9 @@ files = [
     {file = "tablib-3.8.0.tar.gz", hash = "sha256:94d8bcdc65a715a0024a6d5b701a5f31e45bd159269e62c73731de79f048db2b"},
 ]
 
+[package.dependencies]
+openpyxl = {version = ">=2.6.0", optional = true, markers = "extra == \"xlsx\""}
+
 [package.extras]
 all = ["odfpy", "openpyxl (>=2.6.0)", "pandas", "pyyaml", "tabulate", "xlrd", "xlwt"]
 cli = ["tabulate"]
@@ -1095,4 +1162,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "5788470fafcd04f8003a758da3b515d4b92016e8ddbe19f517160b5f47a74817"
+content-hash = "c19a5ee6d45cc0714fd2c6dd1c3ec0f9f5084cd70df568ca9b088191c4660a66"

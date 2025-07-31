@@ -18,11 +18,11 @@ class Hanich(models.Model):
                                       verbose_name=hebrew_constants.PERSONAL_PHONE)
     email = models.EmailField(null=True, blank=True, verbose_name=hebrew_constants.EMAIL)
     gender = models.CharField(max_length=10, choices=Gender.choices, null=True,
-                              blank=True, verbose_name=hebrew_constants.GENDER)
+                              blank=True, verbose_name=hebrew_constants.GENDER)#FK
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=hebrew_constants.DATE_OF_BIRTH)
-    mahoz = models.CharField(max_length=50, null=True, blank=True, verbose_name=hebrew_constants.MAHOZ)
-    ken = models.CharField(max_length=50, null=True, blank=True, verbose_name=hebrew_constants.KEN)
-    grade = models.PositiveSmallIntegerField(null=True, blank=True, verbose_name=hebrew_constants.GRADE)
+    mahoz = models.CharField(max_length=50, null=True, blank=True, verbose_name=hebrew_constants.MAHOZ)#FK
+    ken = models.CharField(max_length=50, null=True, blank=True, verbose_name=hebrew_constants.KEN)#FK
+    grade = models.CharField(null=True, blank=True, verbose_name=hebrew_constants.GRADE)
     food_preference = models.CharField(max_length=50, choices=FoodPreference.choices, null=True, blank=True,
                                        verbose_name=hebrew_constants.FOOD_PREFERENCE)
     registration_date = models.DateField(null=True, blank=True, verbose_name=hebrew_constants.REGISTRATION_DATE)
