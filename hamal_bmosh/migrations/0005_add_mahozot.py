@@ -5,7 +5,7 @@ from django.db import migrations
 from hamal_bmosh.setup.mahozot import mahozot_list
 
 
-def add_bmosh_mahozot(apps, schema_editor):
+def add_mahozot(apps, schema_editor):
     Mahoz = apps.get_model("hamal_bmosh", "Mahoz")
     for mahoz in mahozot_list:
         new_mahoz = Mahoz.objects.create(mahoz_code=mahoz["code_mahoz"], mahoz_name=mahoz["name"])
@@ -17,5 +17,5 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RunPython(add_bmosh_mahozot, migrations.RunPython.noop)
+        migrations.RunPython(add_mahozot, migrations.RunPython.noop)
     ]

@@ -10,7 +10,7 @@ class Mahoz(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.mahoz_name} {self.mahoz_code}"
+        return f"{self.mahoz_name}"
 
     class Meta:
         verbose_name = hebrew_constants.MAHOZ
