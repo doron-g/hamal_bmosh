@@ -65,7 +65,9 @@ class Base(Configuration):
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         "hamal.middleware.TimezoneMiddleware",
-        'querycount.middleware.QueryCountMiddleware'
+        'querycount.middleware.QueryCountMiddleware',
+        'simple_history.middleware.HistoryRequestMiddleware',
+        'admin_reorder.middleware.ModelAdminReorder',
 
     ]
     QUERYCOUNT = {
@@ -184,6 +186,9 @@ class Base(Configuration):
         'sites',
         {'app': 'hamal_bmosh', 'label': "חניכים", "models": (
             'hamal_bmosh.Hanich',
+        )},
+        {'app': 'hamal_bmosh', 'label': "מחוזות וקינים", "models": (
+            'hamal_bmosh.Mahoz', 'hamal_bmosh.Ken',
         )},
         {'app': 'auth'},
 
