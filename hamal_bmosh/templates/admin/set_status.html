@@ -1,0 +1,21 @@
+{% extends "admin/base_site.html" %}
+{% block content %}
+  <form method="post">{% csrf_token %}
+    {{ form.as_p }}
+    <input type="hidden" name="ids" value="{{ ids }}">
+    <div class="submit-row">
+      <input type="submit" value="עדכן סטטוס" class="button default" style="margin-left: 10px;">
+      <a href=".." class="button deletelink" style="
+          display: inline-block;
+          padding: 10px 16px;
+          font-size: 13px;
+          line-height: 1.5;
+          text-align: center;
+          background-color: #ba2121;
+          color: #fff;
+          border-radius: 4px;
+          text-decoration: none;
+      ">ביטול</a>
+    </div>
+  </form>
+{% endblock %}
