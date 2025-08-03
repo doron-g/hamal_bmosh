@@ -22,42 +22,34 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     fieldsets = (
         ("פרטים אישיים", {
             "fields": (
-                "personal_id",
-                "first_name",
-                "last_name",
-                "gender",
-                "date_of_birth",
+                ("first_name", "last_name"),
+                ("personal_id", "gender", "date_of_birth"),
             )
         }), ("סטטוסים", {
             "fields": (
-                "arrived_to_the_event",
-                "status_hanich",
+                ("arrived_to_the_event", "status_hanich", "is_cancelled"),
             )
         }
              ),
 
         ("פרטי קשר", {
             "fields": (
-                "parent_name",
-                "parent_phone",
-                "second_parent_phone",
-                "personal_phone",
+                ("parent_name", "parent_phone"),
+                ("second_parent_phone", "personal_phone"),
                 "email",
             )
         }),
         ("שיוך בתנועה", {
             "fields": (
-                "mahoz",
-                "ken",
+                ("mahoz", "ken"),
                 "grade",
             )
         }),
         ("העדפות והרשמה", {
             "fields": (
                 "food_preference",
-                "registration_date",
-                "registration_time",
-                "is_cancelled",
+                ("registration_date", "registration_time"),
+
             )
         }),
     )
