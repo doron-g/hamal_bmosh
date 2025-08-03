@@ -3,19 +3,21 @@ from django.contrib import admin
 from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
+from hamal_bmosh.admin import HanichBusAssignmentInlineAdmin
 from hamal_bmosh.models import Hanich, StatusHanich
 from hamal_bmosh.resources import HanichResource
 
 
 class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = HanichResource
-    search_fields = ["first_name", "last_name", "personal_id", "mahoz", "ken"]
+    search_fields = ["first_name", "last_name", "personal_id", "mahoz__mahoz_name", "ken__ken_name"]
     list_display = ["first_name", "last_name", "mahoz", "ken", "status_hanich"]
     autocomplete_fields = ["mahoz", "ken", "status_hanich"]
     list_filter = [AutocompleteFilterFactory("מחוז", "mahoz"),
                    AutocompleteFilterFactory("קן", "ken"),
                    AutocompleteFilterFactory("סטטוס", "status_hanich"),
                    "arrived_to_the_event"]
+    inlines = [HanichBusAssignmentInlineAdmin]
 
     fieldsets = (
         ("פרטים אישיים", {
