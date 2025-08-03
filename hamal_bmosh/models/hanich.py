@@ -31,6 +31,9 @@ class Hanich(models.Model):
     registration_date = models.DateField(null=True, blank=True, verbose_name=hebrew_constants.REGISTRATION_DATE)
     registration_time = models.TimeField(null=True, blank=True, verbose_name=hebrew_constants.REGISTRATION_TIME)
     is_cancelled = models.BooleanField(default=False, verbose_name=hebrew_constants.IS_CANCELLED)
+    arrived_to_the_event = models.BooleanField(default=False, verbose_name=hebrew_constants.ARRIVED_TO_THE_EVENT)
+    status_hanich = models.ForeignKey(to="StatusHanich", null=True, blank=True, on_delete=models.SET_NULL,
+                      limit_choices_to={"active_status": True}, verbose_name=hebrew_constants.STATUS_HANICH)
 
     history = HistoricalRecords()
 
@@ -40,3 +43,15 @@ class Hanich(models.Model):
     class Meta:
         verbose_name = hebrew_constants.HANICH
         verbose_name_plural = hebrew_constants.HANICHIM
+
+
+class StatusHanich(models.Model):
+    status = models.CharField(max_length=100, verbose_name=hebrew_constants.STATUS)
+    active_status = models.BooleanField(default=True, verbose_name=hebrew_constants.ACTIVE_STATUS)
+
+    def __str__(self):
+        return f"{self.status}"
+
+    class Meta:
+        verbose_name = hebrew_constants.STATUS_HANICH
+        verbose_name_plural = hebrew_constants.STATUS_HANICHIM
