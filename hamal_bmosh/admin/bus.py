@@ -18,12 +18,14 @@ class BusStopInlineAdmin(admin.TabularInline):
 class BusAdmin(admin.ModelAdmin):
     list_display = ("number", "direction", "company", "driver_name")
     inlines = [HanichBusAssignmentInlineAdmin, BusStopInlineAdmin]
+    date_hierarchy = "date"
 
 
 class BusStopAdmin(admin.ModelAdmin):
     list_display = ("name", "bus", "arrival_time", "date")
     list_filter = ("bus", "date")
     search_fields = ("name", "bus__number")
+    date_hierarchy = "date"
 
 
 admin.site.register(Bus, BusAdmin)
