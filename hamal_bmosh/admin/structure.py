@@ -1,16 +1,17 @@
 from admin_auto_filters.filters import AutocompleteFilterFactory
 from django.contrib import admin
+from simple_history.admin import SimpleHistoryAdmin
 
 from hamal_bmosh.models import Mahoz, Ken, Grade
 
 
-class MahozAdmin(admin.ModelAdmin):
+class MahozAdmin(SimpleHistoryAdmin):
     search_fields = ["mahoz_code", "mahoz_name"]
     list_display = ["mahoz_code", "mahoz_name"]
     readonly_fields = ["mahoz_code"]
 
 
-class KenAdmin(admin.ModelAdmin):
+class KenAdmin(SimpleHistoryAdmin):
     search_fields = ["ken_code", "ken_name", "mahoz__mahoz_name", "mahoz__mahoz_code"]
     list_display = ["ken_code", "ken_name", "get_mahoz_name"]
     readonly_fields = ["ken_code"]
@@ -23,7 +24,7 @@ class KenAdmin(admin.ModelAdmin):
     get_mahoz_name.short_description = "שם מחוז"
 
 
-class GradeAdmin(admin.ModelAdmin):
+class GradeAdmin(SimpleHistoryAdmin):
     pass
 
 
