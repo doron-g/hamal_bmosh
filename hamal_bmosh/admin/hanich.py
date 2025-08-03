@@ -82,7 +82,7 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
     def set_status_view(self, request):
         ids = request.GET.get("ids", "")
         hanich_ids = ids.split(",")
-
+        hanichim = Hanich.objects.filter(id__in=hanich_ids).select_related("mahoz", "ken", "status_hanich")
         if request.method == "POST":
             form = SetStatusForm(request.POST)
             if form.is_valid():
@@ -96,6 +96,7 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
         return render(request, "admin/set_status.html", {
             "form": form,
             "ids": ids,
+            "hanichim": hanichim,
             "title": "שינוי סטטוס לחניכים נבחרים"
         })
 
