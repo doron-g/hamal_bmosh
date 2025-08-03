@@ -188,7 +188,7 @@ class Base(Configuration):
             'hamal_bmosh.Hanich', 'hamal_bmosh.StatusHanich',
         )},
         {'app': 'hamal_bmosh', 'label': "נסיעות", "models": (
-            'hamal_bmosh.Bus', 'hamal_bmosh.BusStop')},
+            'hamal_bmosh.Bus', 'hamal_bmosh.BusStop',)},
         {'app': 'hamal_bmosh', 'label': "מחוזות וקינים", "models": (
             'hamal_bmosh.Mahoz', 'hamal_bmosh.Ken', 'hamal_bmosh.Grade',
         )},
