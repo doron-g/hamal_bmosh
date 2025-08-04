@@ -16,7 +16,6 @@ class HanichImportTestCase(HamalBaseTestCase):
         response = self.client.get(self.import_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, 'form action=""')
-        Mahoz.objects.create(mahoz_name="מחוז בדיקה")
         mock_data = [[
             ("ת.ז. חניך", "123456789"),
             ("שם חניך", "יוסי"),
@@ -46,6 +45,81 @@ class HanichImportTestCase(HamalBaseTestCase):
         )
         number_of_hanichim = Hanich.objects.count()
         self.assertEqual(number_of_hanichim, 1)
+
+    def test_import_five_hanichim_from_different_kens_same_mahoz(self):
+        base_row = [
+            ("שם ההורה", "הורה של חניך"),
+            ("טלפון", "0501234567"),
+            ("טלפון שני", "0507654321"),
+            ("טלפון חניך", "0509999999"),
+            ("כתובת מייל", "test@example.com"),
+            ("מין (ז / נ)", "ז"),
+            ("תאריך לידה", "2010-01-01"),
+            ("מחוז", "מחוז בדיקה"),
+            ("שכבה", "י'"),
+            ("האם החניך/ה צמחוני/ת, בשרי/ת או טבעוני/ת?  פרט/י", "בשרי/ת"),
+            ("ת. תשלום/שיחה", "2025-07-20"),
+            ("זמן תשלום/שיחה", "10:00"),
+        ]
+
+        # מייצר 5 חניכים עם ת"ז, שם וקן שונים
+        mock_data = []
+        for i in range(5):
+            row = base_row.copy()
+            row.insert(0, ("ת.ז. חניך", f"12345678{i}"))
+            row.insert(1, ("שם חניך", f"חניך{i}"))
+            row.insert(2, ("שם משפחה", f"בדיקה{i}"))
+            row.insert(10, ("קן", f"קן מספר {i}"))  # שדה קן במיקום הנכון
+            mock_data.append(row)
+
+        upload_response = self.upload_to_import_form(mock_data)
+        self.verify_response_after_upload_file(upload_response)
+
+        process_response = self.upload_to_process_endpoint(upload_response)
+        self.assertEqual(process_response.status_code, status.HTTP_200_OK)
+        self.assertContains(
+            process_response,
+            "הייבוא הסתיים: נוספו 5, עודכנו 0, נמחקו 0, דולגו 0."
+        )
+        self.assertEqual(Hanich.objects.count(), 5)
+
+    def test_import_creates_mahoz_and_ken(self):
+        # מוודא שאין מחוז קודם
+        self.assertFalse(Mahoz.objects.filter(mahoz_name="מחוז חדש").exists())
+
+        mock_data = [[
+            ("ת.ז. חניך", "987654321"),
+            ("שם חניך", "דני"),
+            ("שם משפחה", "חדשה"),
+            ("שם ההורה", "אמא של דני"),
+            ("טלפון", "0501112222"),
+            ("טלפון שני", "0503334444"),
+            ("טלפון חניך", "0505556666"),
+            ("כתובת מייל", "dani@example.com"),
+            ("מין (ז / נ)", "ז"),
+            ("תאריך לידה", "2009-05-10"),
+            ("מחוז", "מחוז חדש"),
+            ("קן", "קן חדש"),
+            ("שכבה", "ח'"),
+            ("האם החניך/ה צמחוני/ת, בשרי/ת או טבעוני/ת?  פרט/י", "טבעוני/ת"),
+            ("ת. תשלום/שיחה", "2025-07-25"),
+            ("זמן תשלום/שיחה", "14:45"),
+        ]]
+
+        upload_response = self.upload_to_import_form(mock_data)
+        self.verify_response_after_upload_file(upload_response)
+
+        process_response = self.upload_to_process_endpoint(upload_response)
+        self.assertEqual(process_response.status_code, status.HTTP_200_OK)
+        self.assertContains(
+            process_response,
+            "הייבוא הסתיים: נוספו 1, עודכנו 0, נמחקו 0, דולגו 0."
+        )
+
+        # בדיקות על יצירת הנתונים
+        self.assertEqual(Hanich.objects.count(), 1)
+        self.assertTrue(Mahoz.objects.filter(mahoz_name="מחוז חדש").exists())
+        self.assertTrue(Mahoz.objects.get(mahoz_name="מחוז חדש").ken_set.filter(ken_name="קן חדש").exists())
 
     def upload_to_import_form(self, mock_data):
         input_format = MinimalImportFormat.XLSX

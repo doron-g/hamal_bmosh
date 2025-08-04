@@ -101,3 +101,9 @@ class HanichResource(resources.ModelResource):
             "registration_date",
             "registration_time"
         ]
+
+    def before_import_row(self, row, **kwargs):
+        # ודא שהמחוז קיים לפני שהקן ייבדק
+        mahoz_name = row.get("מחוז", "").strip()
+        if mahoz_name:
+            Mahoz.objects.get_or_create(mahoz_name=mahoz_name)
