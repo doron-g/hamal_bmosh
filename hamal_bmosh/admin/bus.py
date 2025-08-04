@@ -19,6 +19,27 @@ class BusAdmin(admin.ModelAdmin):
     list_display = ("number", "direction", "company", "driver_name")
     inlines = [HanichBusAssignmentInlineAdmin, BusStopInlineAdmin]
     date_hierarchy = "date"
+    fieldsets = (
+        ("מספר וכיוון", {
+            "fields": (("date", "number", "direction"),)
+        }),
+        ("פרטי אחראי נסיעה", {
+            "fields": (("escort_name", "escort_phone"),)
+        }),
+        ("פרטי חברה ונהג", {
+            "fields": (("company", "driver_name", "driver_phone"),)
+        }),
+    )
+    search_fields = [
+        "number",
+        "escort_name",
+        "escort_phone",
+        "hanichbusassignment__hanich__first_name",
+        "hanichbusassignment__hanich__last_name",
+        "hanichbusassignment__hanich__personal_id",
+        "hanichbusassignment__hanich__ken__ken_name",
+        "hanichbusassignment__hanich__mahoz__mahoz_name",
+    ]
 
 
 class BusStopAdmin(admin.ModelAdmin):

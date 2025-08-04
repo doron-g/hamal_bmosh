@@ -19,7 +19,6 @@ class Bus(models.Model):
     escort_name = models.CharField(max_length=100, verbose_name=hebrew_constants.ESCORT_NAME, null=True, blank=True)
     escort_phone = models.CharField(max_length=15, verbose_name=hebrew_constants.ESCORT_PHONE, null=True, blank=True)
 
-
     def __str__(self):
         return f"אוטובוס {self.number} ({self.get_direction_display()})"
 
