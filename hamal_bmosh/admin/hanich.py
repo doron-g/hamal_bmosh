@@ -115,12 +115,12 @@ class SetStatusForm(forms.Form):
     )
 
 
-class StatusHanichAdmin(admin.ModelAdmin):
+class StatusHanichAdmin(SimpleHistoryAdmin):
     list_display = ["status", "active_status"]
     search_fields = ["status"]
 
 
-class HanichExtraQuestionAdmin(admin.ModelAdmin):
+class HanichExtraQuestionAdmin(SimpleHistoryAdmin):
     list_display = ["hanich__first_name", "hanich__last_name","hanich__ken__ken_name", "question", "answer"]
     autocomplete_fields = ["hanich"]
 

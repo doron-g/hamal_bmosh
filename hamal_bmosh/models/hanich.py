@@ -49,6 +49,7 @@ class Hanich(models.Model):
 class StatusHanich(models.Model):
     status = models.CharField(max_length=100, verbose_name=hebrew_constants.STATUS)
     active_status = models.BooleanField(default=True, verbose_name=hebrew_constants.ACTIVE_STATUS)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.status}"
@@ -63,6 +64,7 @@ class HanichExtraQuestion(models.Model):
                                verbose_name=hebrew_constants.HANICH)
     question = models.CharField(max_length=255, verbose_name=hebrew_constants.QUESTION)
     answer = models.TextField(verbose_name=hebrew_constants.ANSWER, blank=True, null=True)
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = hebrew_constants.EXTRA_QUESTION

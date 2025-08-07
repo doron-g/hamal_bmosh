@@ -36,6 +36,7 @@ class Ken(models.Model):
 class Grade(models.Model):
     name = models.CharField(max_length=45, blank=True, null=True, choices=GradeNameChoices.choices,
                             verbose_name=hebrew_constants.GRADE)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.name}"
