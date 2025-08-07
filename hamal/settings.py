@@ -185,7 +185,7 @@ class Base(Configuration):
     ADMIN_REORDER = (
         'sites',
         {'app': 'hamal_bmosh', 'label': "חניכים", "models": (
-            'hamal_bmosh.Hanich', 'hamal_bmosh.StatusHanich',
+            'hamal_bmosh.Hanich', 'hamal_bmosh.HanichExtraQuestion', 'hamal_bmosh.StatusHanich',
         )},
         {'app': 'hamal_bmosh', 'label': "נסיעות", "models": (
             'hamal_bmosh.Bus', 'hamal_bmosh.BusStop',)},
