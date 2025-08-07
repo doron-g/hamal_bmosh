@@ -49,6 +49,7 @@ class Hanich(models.Model):
 class StatusHanich(models.Model):
     status = models.CharField(max_length=100, verbose_name=hebrew_constants.STATUS)
     active_status = models.BooleanField(default=True, verbose_name=hebrew_constants.ACTIVE_STATUS)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"{self.status}"
@@ -59,14 +60,16 @@ class StatusHanich(models.Model):
 
 
 class HanichExtraQuestion(models.Model):
-    hanich = models.ForeignKey(to="hamal_bmosh.Hanich", on_delete=models.CASCADE, related_name="extra_questions",
-                               verbose_name=hebrew_constants.HANICH)
+    hanich_in_event = models.ForeignKey(to="hamal_bmosh.HanichInEvent", on_delete=models.CASCADE,
+                                        related_name="extra_questions",
+                                        verbose_name=hebrew_constants.HANICH)
     question = models.CharField(max_length=255, verbose_name=hebrew_constants.QUESTION)
     answer = models.TextField(verbose_name=hebrew_constants.ANSWER, blank=True, null=True)
+    history = HistoricalRecords()
 
     class Meta:
         verbose_name = hebrew_constants.EXTRA_QUESTION
         verbose_name_plural = hebrew_constants.EXTRA_QUESTIONS
 
     def __str__(self):
-        return f"{self.hanich} - {self.question} - {self.answer}"
+        return f"{self.hanich_in_event} - {self.question} - {self.answer}"

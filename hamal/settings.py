@@ -42,6 +42,7 @@ class Base(Configuration):
         'simple_history',
         'admin_auto_filters',
         'admin_reorder',
+        'nested_admin'
     ]
     DJANGO_APPS = [
         'django.contrib.admin',
@@ -186,6 +187,9 @@ class Base(Configuration):
         'sites',
         {'app': 'hamal_bmosh', 'label': "חניכים", "models": (
             'hamal_bmosh.Hanich', 'hamal_bmosh.HanichExtraQuestion', 'hamal_bmosh.StatusHanich',
+        )},
+        {'app': 'hamal_bmosh', 'label': "אירועים", "models": (
+            'hamal_bmosh.Event', 'hamal_bmosh.EventRosh', 'hamal_bmosh.EventGroup', 'hamal_bmosh.HanichInEvent'
         )},
         {'app': 'hamal_bmosh', 'label': "נסיעות", "models": (
             'hamal_bmosh.Bus', 'hamal_bmosh.BusStop',)},

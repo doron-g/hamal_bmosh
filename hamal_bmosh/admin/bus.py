@@ -1,9 +1,10 @@
 from django.contrib import admin
+from nested_admin.nested import NestedStackedInline
 
 from hamal_bmosh.models import Bus, HanichBusAssignment, BusStop
 
 
-class HanichBusAssignmentInlineAdmin(admin.TabularInline):
+class HanichBusAssignmentInlineAdmin(NestedStackedInline):
     model = HanichBusAssignment
     fields = ["hanich", "bus"]
     extra = 0

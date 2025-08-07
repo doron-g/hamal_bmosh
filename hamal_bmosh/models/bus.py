@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 import hebrew_constants
 
@@ -18,6 +19,7 @@ class Bus(models.Model):
     driver_phone = models.CharField(max_length=15, verbose_name=hebrew_constants.DRIVER_PHONE, null=True, blank=True)
     escort_name = models.CharField(max_length=100, verbose_name=hebrew_constants.ESCORT_NAME, null=True, blank=True)
     escort_phone = models.CharField(max_length=15, verbose_name=hebrew_constants.ESCORT_PHONE, null=True, blank=True)
+    history = HistoricalRecords()
 
     def __str__(self):
         return f"אוטובוס {self.number} ({self.get_direction_display()})"
@@ -33,6 +35,7 @@ class BusStop(models.Model):
                             verbose_name=hebrew_constants.BUS)
     name = models.CharField(max_length=100, verbose_name=hebrew_constants.BUS_STOP_NAME)
     arrival_time = models.TimeField(verbose_name=hebrew_constants.ARRIVAL_TIME)
+    history = HistoricalRecords()
 
     class Meta:
         ordering = ['arrival_time']
