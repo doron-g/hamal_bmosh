@@ -121,7 +121,7 @@ class StatusHanichAdmin(admin.ModelAdmin):
 
 
 class HanichExtraQuestionAdmin(admin.ModelAdmin):
-    list_display = ["hanich__first_name", "hanich__last_name", "question", "answer"]
+    list_display = ["hanich__first_name", "hanich__last_name","hanich__ken__ken_name", "question", "answer"]
     autocomplete_fields = ["hanich"]
 
 
