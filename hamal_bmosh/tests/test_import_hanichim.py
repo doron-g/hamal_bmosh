@@ -1,7 +1,7 @@
 from django.urls import reverse
 from rest_framework import status
 
-from hamal_bmosh.models import Hanich, Mahoz
+from hamal_bmosh.models import Hanich, Mahoz, HanichExtraQuestion
 from hamal_bmosh.tests.base import HamalBaseTestCase, MinimalImportFormat
 
 
@@ -120,6 +120,88 @@ class HanichImportTestCase(HamalBaseTestCase):
         self.assertEqual(Hanich.objects.count(), 1)
         self.assertTrue(Mahoz.objects.filter(mahoz_name="מחוז חדש").exists())
         self.assertTrue(Mahoz.objects.get(mahoz_name="מחוז חדש").ken_set.filter(ken_name="קן חדש").exists())
+
+
+    def test_import_single_hanich_with_extra_fields_and_ignored_fields(self):
+        # שדות להתעלמות
+        ignored_fields = {
+            "קוד אישור",
+            "קוד קבוצה",
+            "מנפיק קבלה",
+            "מס' קבלה",
+            "מס' ריכוז/הפקדה",
+            "תאריך הפקדה",
+            "סכום",
+            "קבוצה",
+            "חשבון הכנסות ראשי",
+            "סכום לחשבון הכנסות ראשי",
+            "חשבון הכנסות משני",
+            "סיבסוד?",
+            "הנחת אחים?",
+            "בוטל?",
+            "הוחזר חלקית?",
+            "סכום החזר",
+            "מזהה יחודי",
+        }
+
+        # שדות אמיתיים לייבוא
+        included_fields = [
+            ("שם חניך", "דנה"),
+            ("שם משפחה", "כהן"),
+            ("ת.ז. חניך", "123456789"),
+            ("שם ההורה", "אמא של דנה"),
+            ("טלפון", "0501234567"),
+            ("טלפון שני", "0507654321"),
+            ("טלפון חניך", "0509999999"),
+            ("כתובת מייל", "dana@example.com"),
+            ("מין (ז / נ)", "נ"),
+            ("תאריך לידה", "2010-06-15"),
+            ("מחוז", "מחוז הצפון"),
+            ("קן", "קן כרמל"),
+            ("שכבה", "ט'"),
+            ("האם החניך/ה צמחוני/ת, בשרי/ת או טבעוני/ת?  פרט/י", "טבעוני/ת"),
+            ("ת. תשלום/שיחה", "2025-07-20"),
+            ("זמן תשלום/שיחה", "10:30"),
+        ]
+
+        # שאלות נוספות – אמורות להיכנס כ־ExtraHanichAnswer
+        extra_questions = [
+            ("שומר שבת", "כן"),
+            ("מידת חולצה?", "M"),
+            ("תפקיד במחנה", "חניכה"),
+        ]
+
+        # שדות להתעלמות (אמורים להיבלע אבל לא להישמר)
+        ignored_mock_fields = [(field, "ערך לבדיקה") for field in ignored_fields]
+
+        mock_data = [[
+            *included_fields,
+            *extra_questions,
+            *ignored_mock_fields
+        ]]
+
+        upload_response = self.upload_to_import_form(mock_data)
+        self.verify_response_after_upload_file(upload_response)
+
+        process_response = self.upload_to_process_endpoint(upload_response)
+        self.assertEqual(process_response.status_code, status.HTTP_200_OK)
+        self.assertContains(
+            process_response,
+            "הייבוא הסתיים: נוספו 1, עודכנו 0, נמחקו 0, דולגו 0."
+        )
+
+        hanich = Hanich.objects.first()
+        self.assertEqual(hanich.first_name, "דנה")
+
+        # בדיקה: נוצרו רק השאלות הנוספות הרצויות
+        answers = HanichExtraQuestion.objects.filter(hanich=hanich)
+        self.assertEqual(answers.count(), len(extra_questions))
+        for question, answer in extra_questions:
+            self.assertTrue(answers.filter(question=question, answer=answer).exists())
+
+        # בדיקה: אף אחד מהשדות להתעלמות לא נוצר כ־ExtraHanichAnswer
+        for ignored in ignored_fields:
+            self.assertFalse(answers.filter(question=ignored).exists())
 
     def upload_to_import_form(self, mock_data):
         input_format = MinimalImportFormat.XLSX
