@@ -27,6 +27,7 @@ boto3 = ">=1.37.5"
 django-simple-history = "^3.10.1"
 django-admin-autocomplete-filter = "^0.7.1"
 django-modeladmin-reorder = {git = "https://github.com/bloodwithmilk25/django-modeladmin-reorder.git", rev = "master"}
+django-nested-admin = "^4.1.1"
 
 
 

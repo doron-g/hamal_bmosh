@@ -5,20 +5,28 @@ from django.contrib.admin.helpers import ACTION_CHECKBOX_NAME
 from django.shortcuts import redirect, render
 from django.urls import path
 from import_export.admin import ImportExportModelAdmin
+from nested_admin.nested import NestedTabularInline, NestedStackedInline, NestedModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
 from hamal_bmosh.admin import HanichBusAssignmentInlineAdmin
-from hamal_bmosh.models import Hanich, StatusHanich, HanichExtraQuestion
+from hamal_bmosh.models import Hanich, StatusHanich, HanichExtraQuestion, HanichInEvent
 from hamal_bmosh.resources import HanichResource
 
 
-class HanichExtraQuestionInlineAdmin(admin.TabularInline):
+class HanichExtraQuestionInlineAdmin(NestedTabularInline):
     model = HanichExtraQuestion
     fields = ["question", "answer"]
     extra = 0
 
 
-class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
+class HanichInEventInlineAdmin(NestedStackedInline):
+    model = HanichInEvent
+    extra = 0
+    inlines = [HanichExtraQuestionInlineAdmin]
+    fields = ["event", "group"]
+
+
+class HanichAdmin(NestedModelAdmin, ImportExportModelAdmin, SimpleHistoryAdmin):
     resource_class = HanichResource
     search_fields = ["first_name", "last_name", "personal_id", "mahoz__mahoz_name", "ken__ken_name"]
     list_display = ["first_name", "last_name", "mahoz", "ken", "status_hanich"]
@@ -27,7 +35,7 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
                    AutocompleteFilterFactory("קן", "ken"),
                    AutocompleteFilterFactory("סטטוס", "status_hanich"),
                    "arrived_to_the_event"]
-    inlines = [HanichExtraQuestionInlineAdmin, HanichBusAssignmentInlineAdmin]
+    inlines = [HanichBusAssignmentInlineAdmin, HanichInEventInlineAdmin]
     actions = ["set_status_action"]
 
     fieldsets = (
@@ -121,8 +129,8 @@ class StatusHanichAdmin(SimpleHistoryAdmin):
 
 
 class HanichExtraQuestionAdmin(SimpleHistoryAdmin):
-    list_display = ["hanich__first_name", "hanich__last_name","hanich__ken__ken_name", "question", "answer"]
-    autocomplete_fields = ["hanich"]
+    list_display = ["hanich_in_event__hanich__first_name", "hanich_in_event__event__event_name", "question", "answer"]
+    autocomplete_fields = ["hanich_in_event"]
 
 
 admin.site.register(Hanich, HanichAdmin)

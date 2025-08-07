@@ -75,7 +75,9 @@ class HanichInEvent(models.Model):
     history = HistoricalRecords()
 
     def __str__(self):
-        return f"{self.hanich.first_name} {self.hanich.last_name} {self.event.event_name} {self.group.group_name}"
+        if self.hanich and self.event and self.group:
+            return f"{self.hanich.first_name} {self.hanich.last_name} {self.event.event_name} {self.group.group_name}"
+        return ""
 
     class Meta:
         verbose_name = hebrew_constants.HANICH_IN_EVENT

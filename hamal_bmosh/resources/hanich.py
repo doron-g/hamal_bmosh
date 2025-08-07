@@ -4,7 +4,7 @@ from import_export import resources, fields
 from import_export.widgets import Widget, ForeignKeyWidget, CharWidget
 
 from hamal_bmosh.choices import Gender, FoodPreference
-from hamal_bmosh.models import Hanich, Mahoz, Ken, Grade, HanichExtraQuestion
+from hamal_bmosh.models import Hanich, Mahoz, Ken, Grade, HanichExtraQuestion, Event, HanichInEvent
 
 
 class ChoicesWidget(Widget):
@@ -82,6 +82,8 @@ class HanichResource(resources.ModelResource):
         "האם החניך/ה צמחוני/ת, בשרי/ת או טבעוני/ת?  פרט/י",
         "ת. תשלום/שיחה",
         "זמן תשלום/שיחה",
+        "שם אירוע",
+        "תאריך אירוע"
     }
     EXCLUDED_COLUMNS = {
         "קוד אישור",
@@ -167,20 +169,44 @@ class HanichResource(resources.ModelResource):
         if mahoz_name:
             Mahoz.objects.get_or_create(mahoz_name=mahoz_name)
 
+        event_name = row.get("שם אירוע", "").strip()
+        event_date = row.get("תאריך אירוע", "").strip()
+        if event_name and event_date:
+            Event.objects.get_or_create(event_name=event_name, start_date=event_date)
+
     def after_import_row(self, row, row_result, **kwargs):
         instance = getattr(row_result, "instance", None)
         if not instance:
             return
 
-        for column, value in row.items():
-            if column in HanichResource.INCLUDED_COLUMNS or column in HanichResource.EXCLUDED_COLUMNS:
-                continue
+        # שליפת האירוע  # שונה
+        event_name = row.get("שם אירוע", "").strip()
+        event_date = row.get("תאריך אירוע", "").strip()
+        if not (event_name and event_date):
+            return
 
+        try:
+            event = Event.objects.get(event_name=event_name, start_date=event_date)
+        except Event.DoesNotExist:
+            return
+
+        # קישור בין חניך לאירוע  # שונה
+        hanich_in_event = HanichInEvent.objects.create(hanich=instance, event=event)
+
+        # בנייה של רשימת שאלות ל־bulk_create
+        extra_questions = []
+        for column, value in row.items():
+            if column in self.INCLUDED_COLUMNS or column in self.EXCLUDED_COLUMNS:
+                continue
             if value is None or str(value).strip() == "":
                 continue
 
-            HanichExtraQuestion.objects.create(
-                hanich=instance,
+            extra_questions.append(HanichExtraQuestion(
+                hanich_in_event=hanich_in_event,
                 question=column,
                 answer=value,
-            )
+            ))
+
+        # יצירה מרוכזת
+        if extra_questions:
+            HanichExtraQuestion.objects.bulk_create(extra_questions)

@@ -42,6 +42,7 @@ class Base(Configuration):
         'simple_history',
         'admin_auto_filters',
         'admin_reorder',
+        'nested_admin'
     ]
     DJANGO_APPS = [
         'django.contrib.admin',
