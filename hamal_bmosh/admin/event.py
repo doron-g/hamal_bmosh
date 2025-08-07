@@ -30,6 +30,7 @@ class HanichInEventAdmin(SimpleHistoryAdmin):
     list_display = ["hanich", "event", "group"]
     autocomplete_fields = ["hanich", "event", "group"]
     search_fields = ["hanich__name", "event__event_name"]
+    list_filter = [AutocompleteFilterFactory("אירוע", "event"), ]
 
 
 admin.site.register(Event, EventAdmin)

@@ -1,7 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 
-from hamal_bmosh.models import Hanich, Mahoz, HanichExtraQuestion
+from hamal_bmosh.models import Hanich, Mahoz, Event
+from hamal_bmosh.models import HanichInEvent, HanichExtraQuestion
 from hamal_bmosh.tests.base import HamalBaseTestCase, MinimalImportFormat
 
 
@@ -121,30 +122,15 @@ class HanichImportTestCase(HamalBaseTestCase):
         self.assertTrue(Mahoz.objects.filter(mahoz_name="מחוז חדש").exists())
         self.assertTrue(Mahoz.objects.get(mahoz_name="מחוז חדש").ken_set.filter(ken_name="קן חדש").exists())
 
+    from hamal_bmosh.models import Event, HanichInEvent, HanichExtraQuestion
 
     def test_import_single_hanich_with_extra_fields_and_ignored_fields(self):
-        # שדות להתעלמות
         ignored_fields = {
-            "קוד אישור",
-            "קוד קבוצה",
-            "מנפיק קבלה",
-            "מס' קבלה",
-            "מס' ריכוז/הפקדה",
-            "תאריך הפקדה",
-            "סכום",
-            "קבוצה",
-            "חשבון הכנסות ראשי",
-            "סכום לחשבון הכנסות ראשי",
-            "חשבון הכנסות משני",
-            "סיבסוד?",
-            "הנחת אחים?",
-            "בוטל?",
-            "הוחזר חלקית?",
-            "סכום החזר",
-            "מזהה יחודי",
+            "קוד אישור", "קוד קבוצה", "מנפיק קבלה", "מס' קבלה", "מס' ריכוז/הפקדה", "תאריך הפקדה", "סכום",
+            "קבוצה", "חשבון הכנסות ראשי", "סכום לחשבון הכנסות ראשי", "חשבון הכנסות משני",
+            "סיבסוד?", "הנחת אחים?", "בוטל?", "הוחזר חלקית?", "סכום החזר", "מזהה יחודי",
         }
 
-        # שדות אמיתיים לייבוא
         included_fields = [
             ("שם חניך", "דנה"),
             ("שם משפחה", "כהן"),
@@ -162,16 +148,16 @@ class HanichImportTestCase(HamalBaseTestCase):
             ("האם החניך/ה צמחוני/ת, בשרי/ת או טבעוני/ת?  פרט/י", "טבעוני/ת"),
             ("ת. תשלום/שיחה", "2025-07-20"),
             ("זמן תשלום/שיחה", "10:30"),
+            ("שם אירוע", "מחנה קיץ תשפ\"ה"),
+            ("תאריך אירוע", "2025-07-20"),
         ]
 
-        # שאלות נוספות – אמורות להיכנס כ־ExtraHanichAnswer
         extra_questions = [
             ("שומר שבת", "כן"),
             ("מידת חולצה?", "M"),
             ("תפקיד במחנה", "חניכה"),
         ]
 
-        # שדות להתעלמות (אמורים להיבלע אבל לא להישמר)
         ignored_mock_fields = [(field, "ערך לבדיקה") for field in ignored_fields]
 
         mock_data = [[
@@ -184,22 +170,31 @@ class HanichImportTestCase(HamalBaseTestCase):
         self.verify_response_after_upload_file(upload_response)
 
         process_response = self.upload_to_process_endpoint(upload_response)
-        self.assertEqual(process_response.status_code, status.HTTP_200_OK)
+        self.assertEqual(process_response.status_code, 200)
         self.assertContains(
             process_response,
             "הייבוא הסתיים: נוספו 1, עודכנו 0, נמחקו 0, דולגו 0."
         )
 
-        hanich = Hanich.objects.first()
+        # נבדוק שנוצר החניך
+        hanich = Hanich.objects.get(personal_id="123456789")
         self.assertEqual(hanich.first_name, "דנה")
 
-        # בדיקה: נוצרו רק השאלות הנוספות הרצויות
-        answers = HanichExtraQuestion.objects.filter(hanich=hanich)
+        # נבדוק שנוצר האירוע
+        event = Event.objects.get(event_name="מחנה קיץ תשפ\"ה", start_date="2025-07-20")
+        self.assertIsNotNone(event)
+
+        # נבדוק שנוצר HanichInEvent שמקשר בין החניך לאירוע
+        h_in_event = HanichInEvent.objects.get(hanich=hanich, event=event)
+        self.assertIsNotNone(h_in_event)
+
+        # נבדוק שנשמרו רק השאלות הנוספות הרצויות
+        answers = HanichExtraQuestion.objects.filter(hanich_in_event=h_in_event)
         self.assertEqual(answers.count(), len(extra_questions))
         for question, answer in extra_questions:
             self.assertTrue(answers.filter(question=question, answer=answer).exists())
 
-        # בדיקה: אף אחד מהשדות להתעלמות לא נוצר כ־ExtraHanichAnswer
+        # נוודא ששדות להתעלמות לא נכנסו
         for ignored in ignored_fields:
             self.assertFalse(answers.filter(question=ignored).exists())
 
