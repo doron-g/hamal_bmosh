@@ -8,8 +8,14 @@ from import_export.admin import ImportExportModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 
 from hamal_bmosh.admin import HanichBusAssignmentInlineAdmin
-from hamal_bmosh.models import Hanich, StatusHanich
+from hamal_bmosh.models import Hanich, StatusHanich, HanichExtraQuestion
 from hamal_bmosh.resources import HanichResource
+
+
+class HanichExtraQuestionInlineAdmin(admin.TabularInline):
+    model = HanichExtraQuestion
+    fields = ["question", "answer"]
+    extra = 0
 
 
 class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
@@ -21,7 +27,7 @@ class HanichAdmin(ImportExportModelAdmin, SimpleHistoryAdmin):
                    AutocompleteFilterFactory("קן", "ken"),
                    AutocompleteFilterFactory("סטטוס", "status_hanich"),
                    "arrived_to_the_event"]
-    inlines = [HanichBusAssignmentInlineAdmin]
+    inlines = [HanichExtraQuestionInlineAdmin, HanichBusAssignmentInlineAdmin]
     actions = ["set_status_action"]
 
     fieldsets = (
@@ -114,5 +120,11 @@ class StatusHanichAdmin(admin.ModelAdmin):
     search_fields = ["status"]
 
 
+class HanichExtraQuestionAdmin(admin.ModelAdmin):
+    list_display = ["hanich__first_name", "hanich__last_name", "question", "answer"]
+    autocomplete_fields = ["hanich"]
+
+
 admin.site.register(Hanich, HanichAdmin)
 admin.site.register(StatusHanich, StatusHanichAdmin)
+admin.site.register(HanichExtraQuestion, HanichExtraQuestionAdmin)

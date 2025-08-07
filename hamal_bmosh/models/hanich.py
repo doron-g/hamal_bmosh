@@ -33,7 +33,8 @@ class Hanich(models.Model):
     is_cancelled = models.BooleanField(default=False, verbose_name=hebrew_constants.IS_CANCELLED)
     arrived_to_the_event = models.BooleanField(default=False, verbose_name=hebrew_constants.ARRIVED_TO_THE_EVENT)
     status_hanich = models.ForeignKey(to="StatusHanich", null=True, blank=True, on_delete=models.SET_NULL,
-                      limit_choices_to={"active_status": True}, verbose_name=hebrew_constants.STATUS_HANICH)
+                                      limit_choices_to={"active_status": True},
+                                      verbose_name=hebrew_constants.STATUS_HANICH)
 
     history = HistoricalRecords()
 
@@ -55,3 +56,17 @@ class StatusHanich(models.Model):
     class Meta:
         verbose_name = hebrew_constants.STATUS_HANICH
         verbose_name_plural = hebrew_constants.STATUS_HANICHIM
+
+
+class HanichExtraQuestion(models.Model):
+    hanich = models.ForeignKey(to="hamal_bmosh.Hanich", on_delete=models.CASCADE, related_name="extra_questions",
+                               verbose_name=hebrew_constants.HANICH)
+    question = models.CharField(max_length=255, verbose_name=hebrew_constants.QUESTION)
+    answer = models.TextField(verbose_name=hebrew_constants.ANSWER, blank=True, null=True)
+
+    class Meta:
+        verbose_name = hebrew_constants.EXTRA_QUESTION
+        verbose_name_plural = hebrew_constants.EXTRA_QUESTIONS
+
+    def __str__(self):
+        return f"{self.hanich} - {self.question} - {self.answer}"
