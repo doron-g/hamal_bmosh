@@ -274,14 +274,14 @@ resolved_reference = "6cc5060dec2fe1e894c3ba17aeb703b56737c3e8"
 
 [[package]]
 name = "django-nested-admin"
-version = "4.1.1"
+version = "4.1.2"
 description = "Django admin classes that allow for nested inlines"
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "django-nested-admin-4.1.1.tar.gz", hash = "sha256:645d63b38d579b034a65e0983f1f8cbb8824c75b4232f8d62a1583fa7a9f568f"},
-    {file = "django_nested_admin-4.1.1-py3-none-any.whl", hash = "sha256:7e72ab7a8ae4c91074f6f709ce38fdf54f9c5f78d19e68772e0f05b83090ec9f"},
+    {file = "django_nested_admin-4.1.2-py3-none-any.whl", hash = "sha256:d34a8ee931989eff6dd52fc33e6a459e93ce5bb4316f82d6c473ec91716755e2"},
+    {file = "django_nested_admin-4.1.2.tar.gz", hash = "sha256:77a9b981119d77a56603ba499c83fff00fa76c282883b4aa0f88f0ca3a22e0da"},
 ]
 
 [package.dependencies]
@@ -1192,4 +1192,4 @@ zstd = ["zstandard (>=0.18.0)"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.12,<3.13"
-content-hash = "45c3e55696d9c352cd5969c6f39ca34e32cb92258e2f7cb986d668f00dfb386a"
+content-hash = "8824c24c0eb437530b4339d0bd4cdf7872d406162549a04fadf3fa7718d7c243"
