@@ -30,7 +30,7 @@ urlpatterns = [
     path('health_check', views.healthcheck, name='healthcheck'),
     path('api-token-auth/', login_not_required(TokenObtainPairView.as_view()), name='api-token-obtain-pair'),
     path('api-token-refresh/', login_not_required(TokenRefreshView.as_view()), name='api-token-refresh'),
-    path('api/', include("hamal_bmosh.urls"))
+    path('api/', include("mifal_management.urls"))
 ]
 
 configuration_name = settings.CONFIGURATION.split(".")[-1]
