@@ -52,7 +52,7 @@ class Base(Configuration):
         'django.contrib.messages',
         'django.contrib.staticfiles',
     ]
-    HAMAL_APPS = ['hamal_bmosh']
+    HAMAL_APPS = ['mifal_management']
     INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + HAMAL_APPS
 
     MIDDLEWARE = [
@@ -185,16 +185,16 @@ class Base(Configuration):
 
     ADMIN_REORDER = (
         'sites',
-        {'app': 'hamal_bmosh', 'label': "חניכים", "models": (
-            'hamal_bmosh.Hanich', 'hamal_bmosh.HanichExtraQuestion', 'hamal_bmosh.StatusHanich',
+        {'app': 'mifal_management', 'label': "חניכים", "models": (
+            'mifal_management.Hanich', 'mifal_management.HanichExtraQuestion', 'mifal_management.StatusHanich',
         )},
-        {'app': 'hamal_bmosh', 'label': "אירועים", "models": (
-            'hamal_bmosh.Event', 'hamal_bmosh.EventRosh', 'hamal_bmosh.EventGroup', 'hamal_bmosh.HanichInEvent'
+        {'app': 'mifal_management', 'label': "אירועים", "models": (
+            'mifal_management.Event', 'mifal_management.EventRosh', 'mifal_management.EventGroup', 'mifal_management.HanichInEvent'
         )},
-        {'app': 'hamal_bmosh', 'label': "נסיעות", "models": (
-            'hamal_bmosh.Bus', 'hamal_bmosh.BusStop',)},
-        {'app': 'hamal_bmosh', 'label': "מחוזות וקינים", "models": (
-            'hamal_bmosh.Mahoz', 'hamal_bmosh.Ken', 'hamal_bmosh.Grade',
+        {'app': 'mifal_management', 'label': "נסיעות", "models": (
+            'mifal_management.Bus', 'mifal_management.BusStop',)},
+        {'app': 'mifal_management', 'label': "מחוזות וקינים", "models": (
+            'mifal_management.Mahoz', 'mifal_management.Ken', 'mifal_management.Grade',
         )},
         {'app': 'auth'},
 
